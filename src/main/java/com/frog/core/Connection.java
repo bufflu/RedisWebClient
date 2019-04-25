@@ -34,7 +34,7 @@ public class Connection implements Closeable {
     }
 
     private void connect() {
-        if (socket != null && socket.isClosed() && !socket.isConnected() && !socket.isBound()) {
+        if (socket == null || socket.isClosed() || !socket.isConnected()) {
             socket = new Socket();
             try {
                 socket.connect(new InetSocketAddress(host, port));

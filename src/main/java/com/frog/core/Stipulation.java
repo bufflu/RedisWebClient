@@ -34,17 +34,20 @@ public class Stipulation {
             throw new RedisException("None Execute Command");
         }
         try {
-            os.flush();
             os.write(COMMAND_HEAD);
             os.write(RedisUtil.int2charBytes(args.length + 1));
             os.write(RedisUtil.ctr());
             os.write(PARAMETER_HEAD);
             os.write(RedisUtil.int2charBytes(cmd.length));
             os.write(RedisUtil.ctr());
+            os.write(cmd);
+            os.write(RedisUtil.ctr());
 
             for (byte[] arg : args) {
                 os.write(PARAMETER_HEAD);
                 os.write(RedisUtil.int2charBytes(arg.length));
+                os.write(RedisUtil.ctr());
+                os.write(arg);
                 os.write(RedisUtil.ctr());
             }
         } catch (IOException e) {
@@ -53,12 +56,11 @@ public class Stipulation {
     }
 
     public static byte[] receive(InputStream is) {
-        BufferedInputStream bis = new BufferedInputStream(is);
         byte[] input = new byte[512];
         int count = 0; // the elements number of iuputArray
         int read = 0;
         try {
-            while ((read = bis.read(buffer)) > -1) {
+            while ((read = is.read(buffer)) > -1) {
                 // double dilatation
                 if (input.length < (read + count)) {
                     byte[] inputDil = new byte[input.length << 1];
