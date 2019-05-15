@@ -55,11 +55,13 @@ public class Stipulation {
         }
     }
 
+    //
     public static byte[] receive(InputStream is) {
         byte[] input = new byte[512];
         int count = 0; // the elements number of iuputArray
         int read = 0;
         try {
+            // !!! not read '-1' in socketstream, so should update in here
             while ((read = is.read(buffer)) > -1) {
                 // double dilatation
                 if (input.length < (read + count)) {
